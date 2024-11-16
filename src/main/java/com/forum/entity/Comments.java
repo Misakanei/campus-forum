@@ -1,6 +1,8 @@
 package com.forum.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author CBL
@@ -46,6 +48,7 @@ public class Comments implements Serializable {
     /**
      * 评论时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
 
     /**

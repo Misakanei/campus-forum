@@ -58,6 +58,21 @@ public class Users implements Serializable {
     private LocalDateTime updatedTime;
 
     /**
+     * 个性签名
+     */
+    private String signature;
+
+    /**
+     * 头像路径
+     */
+    private String avatarPath;
+
+    /**
+     * 管理员标识
+     */
+    private int isAdmin;
+
+    /**
      * 逻辑删除标识
      */
     private Integer deleted;

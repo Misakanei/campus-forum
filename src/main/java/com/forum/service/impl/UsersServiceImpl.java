@@ -10,6 +10,8 @@ import com.forum.utils.MD5Util;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -79,5 +81,49 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean logout(String username) {
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        Users users = usersMapper.selectOne(queryWrapper);
+        if (users != null) {
+            StpUtil.logout(users.getUserId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateSignature(int userId, String signature) {
+        return usersMapper.updateSignature(userId, signature) > 0;
+    }
+
+    @Override
+    public int getCommentsCountById(int userId) {
+        return usersMapper.getCommentsCountById(userId);
+    }
+
+    @Override
+    public boolean updateUserInfo(Users user) {
+        return usersMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public boolean updateAvatar(Integer userId, String avatarPath) {
+        return usersMapper.updateAvatar(userId, avatarPath) > 0;
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        return usersMapper.getAllUsers();
+    }
+
+    @Override
+    public boolean resetPassword(int userId) {
+        String password = MD5Util.inputPassToFormPass("123456");
+        return usersMapper.resetPassword(password, userId) > 0;
     }
 }

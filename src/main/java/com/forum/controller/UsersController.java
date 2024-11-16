@@ -4,10 +4,14 @@ import com.forum.entity.ApiResponse;
 import com.forum.entity.Users;
 import com.forum.service.IUsersService;
 import jakarta.annotation.Resource;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * <p>
@@ -17,11 +21,23 @@ import java.util.Map;
  * @author CBL
  * @since 2024-11-12
  */
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/user")
 public class UsersController {
     @Resource
     private IUsersService usersService;
+
+    @PostMapping("/getAllUsers")
+    public ApiResponse getAllUsers() {
+        try {
+            List<Users> users = usersService.getAllUsers();
+            return new ApiResponse(200, "SUCCESS", "获取所有用户信息成功", users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(500, "ERROR", "服务器内部错误", null);
+        }
+    }
 
     /**
      * 根据id查询用户信息
@@ -29,11 +45,11 @@ public class UsersController {
      * @param id ID
      * @return {@link String }
      */
-    @ResponseBody
-    @GetMapping("/findUserById")
-    public String findUserById(@RequestBody int id) {
+    @GetMapping("/findUserById/{id}")
+    public Users findUserById(@PathVariable int id) {
         Users user = usersService.findUserById(id);
-        return user.toString();
+        user.setPassword(null);
+        return user;
     }
 
     /**
@@ -42,11 +58,14 @@ public class UsersController {
      * @param username 用户名
      * @return {@link String }
      */
-    @ResponseBody
-    @GetMapping("/findUserByUsername")
-    public String findUserByUsername(@RequestParam String username) {
+    @GetMapping("/findUserByUsername/{username}")
+    public String findUserByUsername(@PathVariable String username) {
         Users user = usersService.findUserByUsername(username);
-        return user.toString();
+        if (user != null) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
 
     /**
@@ -55,7 +74,6 @@ public class UsersController {
      * @param user 用户
      * @return {@link ApiResponse }
      */
-    @ResponseBody
     @PostMapping("/register")
     public ApiResponse register(@RequestBody Users user) {
         if (user != null) {
@@ -83,10 +101,9 @@ public class UsersController {
      * @param user 用户
      * @return {@link String }
      */
-    @ResponseBody
-    @PostMapping("/updateInfo")
-    public String updateInfo(@RequestBody Users user) {
-        boolean result = usersService.updateById(user);
+    @PostMapping("/updateUserInfo")
+    public String updateUserInfo(@RequestBody Users user) {
+        boolean result = usersService.updateUserInfo(user);
         if (result) {
             return "success";
         } else {
@@ -101,7 +118,6 @@ public class UsersController {
      * @param loginInfo 登录信息
      * @return {@link ApiResponse }
      */
-    @ResponseBody
     @PostMapping("/login")
     public ApiResponse login(@RequestBody Map<String, String> loginInfo) {
         if (loginInfo.get("username") != null && loginInfo.get("password") != null) {
@@ -109,7 +125,9 @@ public class UsersController {
             String password = loginInfo.get("password");
             boolean isLoginSuccess = usersService.login(username, password);
             if (isLoginSuccess) {
-                return new ApiResponse(200, "SUCCESS", "登录成功", null);
+                Users user = usersService.findUserByUsername(username);
+                user.setPassword(null);
+                return new ApiResponse(200, "SUCCESS", "登录成功", user);
             } else {
                 return new ApiResponse(401, "ERROR_USER_OR_PASSWORD_INCORRECT", "用户名或密码错误", null);
             }
@@ -124,7 +142,6 @@ public class UsersController {
      * @param password map集合，需要三个键值对分别为username，oldPassword，newPassword
      * @return {@link ApiResponse }
      */
-    @ResponseBody
     @PostMapping("/updatePassword")
     public ApiResponse updatePassword(@RequestBody Map<String, String> password) {
         String username = password.get("username");
@@ -138,7 +155,6 @@ public class UsersController {
         }
     }
 
-    @ResponseBody
     @GetMapping("/deleteUser")
     public ApiResponse deleteUser(@RequestParam int id) {
         boolean deleteUserSuccess = usersService.deleteUser(id);
@@ -149,7 +165,6 @@ public class UsersController {
         }
     }
 
-    @ResponseBody
     @GetMapping("/undeleteUser")
     public ApiResponse undeleteUser(@RequestParam int id) {
         boolean deleteUserSuccess = usersService.undeleteUser(id);
@@ -157,6 +172,94 @@ public class UsersController {
             return new ApiResponse(200, "SUCCESS", "启用成功", null);
         } else {
             return new ApiResponse(500, "ERROR", "服务器内部错误", null);
+        }
+    }
+
+    @GetMapping("/logout/{username}")
+    public ApiResponse logout(@PathVariable String username) {
+        boolean isLogoutSuccess = usersService.logout(username);
+        if (isLogoutSuccess) {
+            return new ApiResponse(200, "SUCCESS", "退出登录成功", null);
+        } else {
+            return new ApiResponse(500, "ERROR_USER_IS_NOT_EXISTS", "用户不存在", null);
+        }
+    }
+
+    /**
+     * 修改个性签名
+     *
+     * @param updateSignatureInfo 更新签名信息
+     * @return {@link ApiResponse }
+     */
+    @PostMapping("/updateSignature")
+    public ApiResponse updateSignature(@RequestBody Map<String, String> updateSignatureInfo) {
+        int userId = Integer.parseInt(updateSignatureInfo.get("userId"));
+        String signature = updateSignatureInfo.get("signature");
+        boolean flag = usersService.updateSignature(userId, signature);
+        if (flag) {
+            return new ApiResponse(200, "SUCCESS", "修改成功", null);
+        } else {
+            return new ApiResponse(500, "ERROR", "服务器内部错误", null);
+        }
+    }
+
+    /**
+     * 按ID获取评论计数
+     *
+     * @param userId 用户id
+     * @return {@link ApiResponse }
+     */
+    @PostMapping("getCommentsCountById/{userId}")
+    public ApiResponse getCommentsCountById(@PathVariable int userId) {
+        try {
+            int CommentCount = usersService.getCommentsCountById(userId);
+            return new ApiResponse(200, "SUCCESS", "查询成功", CommentCount);
+        } catch (Exception e) {
+            return new ApiResponse(500, "ERROR", "服务器内部错误", e);
+        }
+    }
+
+    @Value("${file.upload.path}")
+    private String uploadPath;
+
+    /**
+     * 上传头像
+     *
+     * @param file 文件
+     * @param userId 用户id
+     * @return {@link ApiResponse }
+     */
+    @PostMapping("/uploadAvatar")
+    public ApiResponse uploadAvatar(@RequestParam("avatar") MultipartFile file, @RequestParam("userId") Integer userId) {
+        try {
+            String projectPath = System.getProperty("user.dir");
+            String avatarPath = projectPath + "/uploads/images/avatars/";
+            File dir = new File(avatarPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String fileName = "avatar_" + userId + "_" + UUID.randomUUID().toString() + getFileExtension(file.getOriginalFilename());
+            File dest = new File(avatarPath + fileName);
+            file.transferTo(dest);
+            String avatarUrl = "/uploads/images/avatars/" + fileName;
+            return new ApiResponse(200, "SUCCESS", "上传成功", avatarUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(500, "ERROR", "上传失败: " + e.getMessage(), null);
+        }
+    }
+
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    @PostMapping("/resetPassword/{userId}")
+    public ApiResponse resetPassword(@PathVariable int userId) {
+        boolean isResetSuccess = usersService.resetPassword(userId);
+        if (isResetSuccess) {
+            return new ApiResponse(200, "SUCCESS", "重置成功", null);
+        } else {
+            return new ApiResponse(500, "ERROR", "重置失败", null);
         }
     }
 }
