@@ -63,7 +63,7 @@ public class CategoriesController {
      * @return {@link ApiResponse }
      */
     @PostMapping("/deleteCategory/{categoryId}")
-    public ApiResponse deleteCategory(@athVariable int categoryId) {
+    public ApiResponse deleteCategory(@PathVariable int categoryId) {
         try {
             boolean flag = categoriesService.deleteCategory(categoryId);
             if (flag) {
