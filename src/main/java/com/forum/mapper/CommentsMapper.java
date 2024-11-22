@@ -8,7 +8,7 @@ import com.forum.entity.Comments;
  *  Mapper 接口
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 public interface CommentsMapper extends BaseMapper<Comments> {

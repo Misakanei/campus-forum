@@ -21,7 +21,7 @@ import java.util.Map;
  *  服务实现类
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 @Service
@@ -76,6 +76,11 @@ public class PostsServiceImpl extends ServiceImpl<PostsMapper, Posts> implements
         return postsMapper.getCommentsByPostId(postId);
     }
 
+    /**
+     * 点赞
+     *
+     * @param postId 帖子id
+     */
     @Transactional
     public void support(Integer postId) {
         LambdaUpdateWrapper<Posts> updateWrapper = Wrappers.lambdaUpdate();
@@ -83,6 +88,11 @@ public class PostsServiceImpl extends ServiceImpl<PostsMapper, Posts> implements
         postsMapper.update(null, updateWrapper);
     }
 
+    /**
+     * 取消点赞
+     *
+     * @param postId 帖子id
+     */
     @Override
     public void unSupport(Integer postId) {
         LambdaUpdateWrapper<Posts> updateWrapper = Wrappers.lambdaUpdate();
@@ -90,31 +100,76 @@ public class PostsServiceImpl extends ServiceImpl<PostsMapper, Posts> implements
         postsMapper.update(null, updateWrapper);
     }
 
+    /**
+     * 按ID获取帖子
+     *
+     * @param userId 用户id
+     * @return {@link List }<{@link Map }<{@link String }, {@link Object }>>
+     */
     @Override
     public List<Map<String, Object>> selectPostsById(int userId) {
         return postsMapper.selectPostsById(userId);
     }
 
+    /**
+     * 添加帖子
+     *
+     * @param categoryId 类别id
+     * @param userId 用户id
+     * @param title 标题
+     * @param content 内容
+     * @param imagePath 图像路径
+     * @return boolean
+     */
     @Override
     public boolean addPost(Integer categoryId, Integer userId, String title, String content, String imagePath) {
         return postsMapper.addPost(categoryId, userId, title, content, imagePath);
     }
 
+    /**
+     * 删除帖子
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean deletePost(Integer postId) {
         return postsMapper.deleteById(postId) > 0;
     }
 
+    /**
+     * 更新帖子
+     *
+     * @param postId 帖子id
+     * @param categoryId 类别id
+     * @param title 标题
+     * @param content 内容
+     * @param imagePath 图像路径
+     * @return boolean
+     */
     @Override
     public boolean updatePost(Integer postId, Integer categoryId, String title, String content, String imagePath) {
         return postsMapper.updatePost(postId, categoryId, title, content, imagePath) > 0;
     }
 
+    /**
+     * 搜索帖子
+     *
+     * @param keyword 关键字
+     * @return {@link List }<{@link Posts }>
+     */
     @Override
     public List<Posts> searchPosts(String keyword) {
         return postsMapper.searchPosts(keyword);
     }
 
+    /**
+     * 按分页获取帖子
+     *
+     * @param pageNum 页号
+     * @param pageSize 页面大小
+     * @return {@link Page }<{@link Posts }>
+     */
     @Override
     public Page<Posts> getPostsByPage(int pageNum, int pageSize) {
         Page<Posts> page = new Page<>(pageNum, pageSize);

@@ -18,7 +18,7 @@ import java.util.UUID;
  *  前端控制器
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 @RestController
@@ -28,6 +28,11 @@ public class UsersController {
     @Resource
     private IUsersService usersService;
 
+    /**
+     * 获取所有用户
+     *
+     * @return {@link ApiResponse }
+     */
     @PostMapping("/getAllUsers")
     public ApiResponse getAllUsers() {
         try {
@@ -155,6 +160,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 禁用用户
+     *
+     * @param id ID
+     * @return {@link ApiResponse }
+     */
     @GetMapping("/deleteUser")
     public ApiResponse deleteUser(@RequestParam int id) {
         boolean deleteUserSuccess = usersService.deleteUser(id);
@@ -165,6 +176,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 启用用户
+     *
+     * @param id ID
+     * @return {@link ApiResponse }
+     */
     @GetMapping("/undeleteUser")
     public ApiResponse undeleteUser(@RequestParam int id) {
         boolean deleteUserSuccess = usersService.undeleteUser(id);
@@ -175,6 +192,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 注销
+     *
+     * @param username 用户名
+     * @return {@link ApiResponse }
+     */
     @GetMapping("/logout/{username}")
     public ApiResponse logout(@PathVariable String username) {
         boolean isLogoutSuccess = usersService.logout(username);
@@ -253,6 +276,12 @@ public class UsersController {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
+    /**
+     * 重置密码
+     *
+     * @param userId 用户id
+     * @return {@link ApiResponse }
+     */
     @PostMapping("/resetPassword/{userId}")
     public ApiResponse resetPassword(@PathVariable int userId) {
         boolean isResetSuccess = usersService.resetPassword(userId);

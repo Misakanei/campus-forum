@@ -6,8 +6,19 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MybatisPlus配置类
+ *
+ * @author Misaka
+ * @date 2024/11/15
+ */
 @Configuration
 public class MybatisPlusConfiguration {
+    /**
+     * MybatisPlus拦截器
+     *
+     * @return {@link MybatisPlusInterceptor }
+     */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();

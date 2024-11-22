@@ -8,6 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.UUID;
 
+/**
+ * 上传控制器
+ *
+ * @author Misaka
+ * @date 2024/11/18
+ */
 @RestController
 @RequestMapping("/upload")
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
@@ -16,6 +22,12 @@ public class UploadController {
     @Value("${file.upload.path}")
     private String uploadPath;
 
+    /**
+     * 上传图像
+     *
+     * @param file 文件
+     * @return {@link ApiResponse }
+     */
     @PostMapping("/image")
     public ApiResponse uploadImage(@RequestParam("image") MultipartFile file) {
         try {

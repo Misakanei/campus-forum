@@ -2,6 +2,12 @@ package com.forum.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+/**
+ *  MD5工具类
+ *
+ * @author Misaka
+ * @date 2024/11/12
+ */
 public class MD5Util {
     public static String md5(String src) {
         return DigestUtils.md5Hex(src);

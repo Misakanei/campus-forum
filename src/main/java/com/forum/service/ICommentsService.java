@@ -10,7 +10,7 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 public interface ICommentsService extends IService<Comments> {

@@ -13,7 +13,7 @@ import java.util.Map;
  *  前端控制器
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 @RestController
@@ -60,7 +60,7 @@ public class CategoriesController {
      * 删除板块
      *
      * @param categoryId 类别id
-     * @return {@link ApiResponse }
+     * @return {@link ApiResponse }    
      */
     @PostMapping("/deleteCategory/{categoryId}")
     public ApiResponse deleteCategory(@PathVariable int categoryId) {

@@ -13,7 +13,7 @@ import java.util.Map;
  *  服务类
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 public interface IPostsService extends IService<Posts> {
@@ -50,19 +50,74 @@ public interface IPostsService extends IService<Posts> {
      */
     List<Comments> getCommentsByPostId(Integer postId);
 
+    /**
+     * 点赞
+     *
+     * @param postId 帖子id
+     */
     void support(Integer postId);
 
+    /**
+     * 取消点赞
+     *
+     * @param postId 帖子id
+     */
     void unSupport(Integer postId);
 
+    /**
+     * 按ID获取帖子
+     *
+     * @param userId 用户id
+     * @return {@link List }<{@link Map }<{@link String }, {@link Object }>>
+     */
     List<Map<String, Object>> selectPostsById(int userId);
 
+    /**
+     * 添加帖子
+     *
+     * @param categoryId 类别id
+     * @param userId 用户id
+     * @param title 标题
+     * @param content 内容
+     * @param imagePath 图像路径
+     * @return boolean
+     */
     boolean addPost(Integer categoryId, Integer userId, String title, String content, String imagePath);
 
+    /**
+     * 删除帖子
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     boolean deletePost(Integer postId);
 
+    /**
+     * 更新帖子
+     *
+     * @param postId 帖子id
+     * @param categoryId 类别id
+     * @param title 标题
+     * @param content 内容
+     * @param imagePath 图像路径
+     * @return boolean
+     */
     boolean updatePost(Integer postId, Integer categoryId, String title, String content, String imagePath);
 
+    /**
+     * 搜索帖子
+     *
+     * @param trim 装饰
+     * @return {@link List }<{@link Posts }>
+     */
     List<Posts> searchPosts(String trim);
 
+    /**
+     * 按分页获取帖子
+     *
+     * @param pageNum 页号
+     * @param pageSize 页面大小
+     * @return {@link Page }<{@link Posts }>
+     */
     Page<Posts> getPostsByPage(int pageNum, int pageSize);
 }

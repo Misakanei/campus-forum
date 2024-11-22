@@ -14,7 +14,7 @@ import java.util.List;
  *  服务实现类
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 @Service
@@ -40,11 +40,22 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         return commentsMapper.insert(comments) > 0;
     }
 
+    /**
+     * 获取所有评论
+     *
+     * @return {@link List }<{@link Comments }>
+     */
     @Override
     public List<Comments> getAllComments() {
         return commentsMapper.selectList(null);
     }
 
+    /**
+     * 删除评论
+     *
+     * @param commentId 注释id
+     * @return boolean
+     */
     @Override
     public boolean deleteComment(int commentId) {
         return commentsMapper.deleteById(commentId) > 0;

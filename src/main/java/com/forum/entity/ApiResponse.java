@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 用于向前端响应状态信息等
+ * 用于向前端响应状态信息
+ *
+ * @author Misaka
+ * @date 2024/11/13
  */
 @Data
 @AllArgsConstructor

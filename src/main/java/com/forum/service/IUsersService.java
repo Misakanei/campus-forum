@@ -10,7 +10,7 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 public interface IUsersService extends IService<Users> {
@@ -103,9 +103,27 @@ public interface IUsersService extends IService<Users> {
      */
     boolean updateUserInfo(Users user);
 
+    /**
+     * 更新头像
+     *
+     * @param userId 用户id
+     * @param avatarUrl 头像网址
+     * @return boolean
+     */
     boolean updateAvatar(Integer userId, String avatarUrl);
 
+    /**
+     * 获取所有用户
+     *
+     * @return {@link List }<{@link Users }>
+     */
     List<Users> getAllUsers();
 
+    /**
+     * 重置密码
+     *
+     * @param userId 用户id
+     * @return boolean
+     */
     boolean resetPassword(int userId);
 }

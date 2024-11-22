@@ -16,7 +16,7 @@ import java.util.Map;
  *  Mapper 接口
  * </p>
  *
- * @author CBL
+ * @author Misaka
  * @since 2024-11-12
  */
 public interface PostsMapper extends BaseMapper<Posts> {
@@ -60,6 +60,12 @@ public interface PostsMapper extends BaseMapper<Posts> {
             """)
     List<Map<String, Object>> getPostSummaries();
 
+    /**
+     * 获取帖子详细信息
+     *
+     * @param postId 帖子id
+     * @return {@link Posts }
+     */
     @Select("SELECT p.*, u.username AS user_name,image_path, COUNT(c.comment_id) AS comment_count " +
             "FROM posts p " +
             "LEFT JOIN users u ON p.user_id = u.user_id " +
@@ -68,15 +74,33 @@ public interface PostsMapper extends BaseMapper<Posts> {
             "GROUP BY p.post_id")
     Posts getPostWithDetails(Integer postId);
 
+    /**
+     * 获取点赞数
+     *
+     * @param postId 帖子id
+     * @return int
+     */
     @Select("SELECT support as supportCount FROM posts WHERE post_id = #{postId}")
     int getSupportCount(Integer postId);
 
+    /**
+     * 通过帖子ID获取评论
+     *
+     * @param postId 帖子id
+     * @return {@link List }<{@link Comments }>
+     */
     @Select("SELECT c.*, u.username AS user_name " +
             "FROM comments c " +
             "LEFT JOIN users u ON c.user_id = u.user_id " +
             "WHERE c.post_id = #{postId}")
     List<Comments> getCommentsByPostId(Integer postId);
 
+    /**
+     * 按ID获取帖子
+     *
+     * @param userId 用户id
+     * @return {@link List }<{@link Map }<{@link String }, {@link Object }>>
+     */
     @Select("SELECT * FROM posts WHERE user_id = #{userId} and deleted = 0;")
     List<Map<String, Object>> selectPostsById(int userId);
 
