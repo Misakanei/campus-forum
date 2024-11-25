@@ -179,12 +179,17 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
      * 更新头像
      *
      * @param userId 用户id
-     * @param avatarPath 化身路径
+     * @param avatarUrl 头像路径
      * @return boolean
      */
     @Override
-    public boolean updateAvatar(Integer userId, String avatarPath) {
-        return usersMapper.updateAvatar(userId, avatarPath) > 0;
+    public boolean updateAvatar(Integer userId, String avatarUrl) {
+        Users user = this.getById(userId);
+        if (user != null) {
+            user.setAvatarPath(avatarUrl);
+            return this.updateById(user);
+        }
+        return false;
     }
 
     /**

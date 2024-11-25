@@ -257,14 +257,23 @@ public class UsersController {
         try {
             String projectPath = System.getProperty("user.dir");
             String avatarPath = projectPath + "/uploads/images/avatars/";
+            
             File dir = new File(avatarPath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
+            
             String fileName = "avatar_" + userId + "_" + UUID.randomUUID().toString() + getFileExtension(file.getOriginalFilename());
-            File dest = new File(avatarPath + fileName);
+            File dest = new File(dir, fileName);
             file.transferTo(dest);
+            
             String avatarUrl = "/uploads/images/avatars/" + fileName;
+
+            boolean updateResult = usersService.updateAvatar(userId, avatarUrl);
+            if (!updateResult) {
+                return new ApiResponse(500, "ERROR", "头像路径更新失败", null);
+            }
+            
             return new ApiResponse(200, "SUCCESS", "上传成功", avatarUrl);
         } catch (Exception e) {
             e.printStackTrace();

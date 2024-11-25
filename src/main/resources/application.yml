@@ -46,4 +46,4 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 file:
   upload:
-    path: ${user.dir}/uploads/images/
+    path: /uploads/images/

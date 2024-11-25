@@ -33,8 +33,11 @@ public class UploadController {
         try {
             // 获取项目根目录的绝对路径
             String projectPath = System.getProperty("user.dir");
+            // 构建完整的上传路径
+            String fullUploadPath = projectPath + uploadPath;
+            
             // 确保上传目录存在
-            File uploadDir = new File(projectPath + File.separator + uploadPath);
+            File uploadDir = new File(fullUploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
@@ -49,7 +52,7 @@ public class UploadController {
             file.transferTo(dest);
 
             // 返回文件访问路径
-            String filePath = "/uploads/images/" + fileName;
+            String filePath = uploadPath + fileName;
             return new ApiResponse(200, "SUCCESS", "上传成功", filePath);
 
         } catch (Exception e) {
